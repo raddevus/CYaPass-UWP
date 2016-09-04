@@ -299,6 +299,8 @@ namespace CYaPass
         private async void AddSiteButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new MessageDialog("Your message here","Add Site");
+            
+            
             await dialog.ShowAsync();
             allSites.Add(new CYaPass.SiteKey("test 1"));
             SiteListBox.Items.Add((SiteKey)allSites[0]);
@@ -321,6 +323,4 @@ namespace CYaPass
             }
         }
     }
-
-   
 }

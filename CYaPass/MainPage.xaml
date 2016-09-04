@@ -20,7 +20,7 @@
         <Button x:Name="AddSiteButton" Content="Add Site" HorizontalAlignment="Left"
                 
                 Margin="198,221,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
-        <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left" Margin="82,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
+        <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left" Margin="63,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
 
     </Grid>
 </Page>
