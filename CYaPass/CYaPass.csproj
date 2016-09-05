@@ -103,6 +103,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteKey.cs" />
+    <Compile Include="SiteKeyDialog.xaml.cs">
+      <DependentUpon>SiteKeyDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SiteKeys.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +132,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SiteKeyDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

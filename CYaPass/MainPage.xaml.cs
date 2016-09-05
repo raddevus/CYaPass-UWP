@@ -298,13 +298,22 @@ namespace CYaPass
 
         private async void AddSiteButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new MessageDialog("Your message here","Add Site");
             
+            var dialog = new SiteKeyDialog();
             
-            await dialog.ShowAsync();
-            allSites.Add(new CYaPass.SiteKey("test 1"));
-            SiteListBox.Items.Add((SiteKey)allSites[0]);
-            await allSites.Save();
+            ContentDialogResult cdr = await dialog.ShowAsync();
+            if (cdr == ContentDialogResult.Primary)
+            {
+                //dialog.siteKey;
+                String newKey = dialog.siteKey;
+                allSites.Add(new CYaPass.SiteKey(newKey));
+                SiteListBox.Items.Add(newKey);
+                await allSites.Save();
+
+            }
+            //allSites.Add(new CYaPass.SiteKey("test 1"));
+            //SiteListBox.Items.Add((SiteKey)allSites[0]);
+            //await allSites.Save();
         }
 
         private async void DeleteSiteButton_Click(object sender, RoutedEventArgs e)
