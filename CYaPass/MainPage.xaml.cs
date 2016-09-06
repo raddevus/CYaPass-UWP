@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Security.Cryptography;
+using Windows.Security.Cryptography.Core;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -16,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -39,6 +44,8 @@ namespace CYaPass
         private int postWidth = 10;
         private int centerPoint = 50;
         private int offset;
+        private byte[] saltBytes;
+        private StringBuilder pwdBuilder;
 
         public MainPage()
         {
@@ -48,6 +55,52 @@ namespace CYaPass
             GenerateAllPosts();
             DrawGridLines();
             DrawPosts();
+        }
+
+        private void CalculateGeometricSaltValue()
+        {
+            LineSegments.PostPoints = String.Empty;
+            LineSegments.PostValue = 0;
+
+            foreach (LineSegment l in LineSegments)
+            {
+                for (int x = 0; x < allPosts.Count; x++)
+                {
+                    if (l.Start.X == allPosts[x].X && l.Start.Y == allPosts[x].Y)
+                    {
+                        //System.Diagnostics.Debug.Print(string.Format("START x : {0}", x));
+                        LineSegments.AddOn(x);
+                    }
+                    if (l.End.X == allPosts[x].X && l.End.Y == allPosts[x].Y)
+                    {
+                        //System.Diagnostics.Debug.Print(string.Format("END x : {0}", x));
+                        LineSegments.AddOn(x);
+                    }
+                }
+            }
+            //System.Diagnostics.Debug.Print(String.Format("Value : {0}", LineSegments.PostValue));
+            //System.Diagnostics.Debug.Print(LineSegments.PostPoints);
+        }
+
+        private String GenCrypto(string clearText)
+        {
+            var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256);
+            IBuffer buff = CryptographicBuffer.ConvertStringToBinary(clearText, BinaryStringEncoding.Utf8);
+            var hashed = alg.HashData(buff);
+            var res = CryptographicBuffer.EncodeToHexString(hashed);
+            return res;
+        }
+
+        private void ComputeHashBytes()
+        {
+            
+            var selItemText = SiteListBox.SelectedItem.ToString();
+            
+            string clearTextMessage = LineSegments.PostValue.ToString();
+            clearTextMessage += selItemText;
+
+            passwordTextBox.Text = GenCrypto(clearTextMessage);
+         
         }
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
@@ -276,14 +329,14 @@ namespace CYaPass
             MainCanvas.Children.Add(l);
         }
 
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void MainCanvas_Tapped(object sender, TappedRoutedEventArgs e)
         {
             SelectNewPoint();
+            if (userShape.Count > 1)
+            {
+                CalculateGeometricSaltValue();
+                ComputeHashBytes();
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -298,7 +351,6 @@ namespace CYaPass
 
         private async void AddSiteButton_Click(object sender, RoutedEventArgs e)
         {
-            
             var dialog = new SiteKeyDialog();
             
             ContentDialogResult cdr = await dialog.ShowAsync();
@@ -306,7 +358,7 @@ namespace CYaPass
             {
                 String newKey = dialog.siteKey;
                 allSites.Add(new CYaPass.SiteKey(newKey));
-                SiteListBox.Items.Add(newKey);
+                SiteListBox.Items.Add(new SiteKey(newKey));
                 await allSites.Save();
             }
         }
@@ -315,28 +367,24 @@ namespace CYaPass
         {
             try
             {
-                int itemIdx = SiteListBox.SelectedIndex - 1;
+                //int itemIdx = SiteListBox.SelectedIndex - 1;
+                allSites.Remove((SiteKey)SiteListBox.SelectedItem);
+                SiteListBox.Items.Remove(SiteListBox.SelectedItem);
                 
-                SiteListBox.Items.Remove(allSites[itemIdx]);
-                allSites.Remove(allSites[itemIdx]);
                 await allSites.Save();
             }
             catch (Exception ex)
             {
-
+              
             }
         }
 
         private void ClearGridButton_Click(object sender, RoutedEventArgs e)
         {
-            //allPosts.Clear();
             userShape.Clear();
             LineSegments.Clear();
             MainCanvas.Children.Clear();
             previousPointExists = false;
-            //MainCanvas.Background = new SolidColorBrush(Colors.AliceBlue);
-            
-            //GenerateAllPosts();
             DrawGridLines();
             DrawPosts();
             
