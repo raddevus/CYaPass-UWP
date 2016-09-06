@@ -400,6 +400,7 @@ namespace CYaPass
             DrawGridLines();
             DrawPosts();
             passwordTextBox.Text = String.Empty;
+            Clipboard.SetContent(null);
         }
 
         private void SiteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
