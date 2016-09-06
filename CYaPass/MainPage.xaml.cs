@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Cryptography;
@@ -339,6 +340,9 @@ namespace CYaPass
                 CalculateGeometricSaltValue();
                 ComputeHashBytes();
             }
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(passwordTextBox.Text);
+            Clipboard.SetContent(dataPackage);
         }
 
         private void MainCanvas_Tapped(object sender, TappedRoutedEventArgs e)
