@@ -329,14 +329,22 @@ namespace CYaPass
             MainCanvas.Children.Add(l);
         }
 
-        private void MainCanvas_Tapped(object sender, TappedRoutedEventArgs e)
+        private void GeneratePassword()
         {
-            SelectNewPoint();
+            if (SiteListBox.SelectedItem == null || 
+                SiteListBox.SelectedIndex == 0 ||
+                SiteListBox.SelectedItem.ToString() == String.Empty) { return; }
             if (userShape.Count > 1)
             {
                 CalculateGeometricSaltValue();
                 ComputeHashBytes();
             }
+        }
+
+        private void MainCanvas_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            SelectNewPoint();   
+            GeneratePassword();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -387,7 +395,12 @@ namespace CYaPass
             previousPointExists = false;
             DrawGridLines();
             DrawPosts();
-            
+            passwordTextBox.Text = String.Empty;
+        }
+
+        private void SiteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GeneratePassword();
         }
     }
 }

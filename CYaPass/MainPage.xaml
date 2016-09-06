@@ -9,21 +9,21 @@
     Height="597" Width="570" Background="LightGray" Loaded="Page_Loaded">
 
     <Grid>
-        <Canvas HorizontalAlignment="Left" Name="MainCanvas"
+        <Frame x:Name="frame1" Content="Sites/Keys" HorizontalAlignment="Left" Height="262" VerticalAlignment="Top" Width="284" Margin="0,2,0,0"/>
+
+        <Canvas HorizontalAlignment="Left" x:Name="MainCanvas"
                 Height="252" Width="252" Margin="300,10,0,0" VerticalAlignment="Top" Background="AliceBlue" Tapped="MainCanvas_Tapped" PointerMoved="MainCanvas_PointerMoved"  
                 />
-        <ListView BorderThickness="2" BorderBrush="Aquamarine" x:Name="SiteListBox" HorizontalAlignment="Left" Height="194" Margin="10,10,0,0" VerticalAlignment="Top" Width="264">
-            <GridView>
-
-            </GridView>
+        <ListView BorderThickness="2" BorderBrush="Aquamarine" x:Name="SiteListBox" HorizontalAlignment="Left" Height="187" Margin="10,29,0,0" VerticalAlignment="Top" Width="264" SelectionChanged="SiteListBox_SelectionChanged">
+            <GridView/>
         </ListView>
         <Button x:Name="AddSiteButton" Content="Add Site" HorizontalAlignment="Left"
                 
                 Margin="198,221,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
         <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left" Margin="63,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
         <Button x:Name="ClearGridButton" Content="Clear" HorizontalAlignment="Left" Margin="487,279,0,0" VerticalAlignment="Top" Click="ClearGridButton_Click"/>
-        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="10,318,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="453"/>
-        <Frame x:Name="frame" Content="Generated Password" HorizontalAlignment="Left" Height="62" Margin="0,297,0,0" VerticalAlignment="Top" Width="482"/>
+        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="0,318,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="560"/>
+        <Frame x:Name="frame" Content="Generated Password" HorizontalAlignment="Left" Height="62" Margin="0,297,0,0" VerticalAlignment="Top" Width="560"/>
 
     </Grid>
 </Page>
