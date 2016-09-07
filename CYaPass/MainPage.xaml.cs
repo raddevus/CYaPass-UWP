@@ -92,7 +92,23 @@ namespace CYaPass
             return res;
         }
 
-        private void ComputeHashBytes()
+        private void AddUpperCaseLetter(StringBuilder pwd)
+        {
+            int index = -1;
+            string target = string.Empty;
+            foreach (Char c in pwd.ToString())
+            {
+                index++;
+                if (Char.IsLetter(c))
+                {
+                    target = c.ToString();
+                    break;
+                }
+            }
+            pwd[index] = Convert.ToChar(target.ToUpper());
+        }
+
+        private void ComputeHashString()
         {
             
             var selItemText = SiteListBox.SelectedItem.ToString();
@@ -338,7 +354,13 @@ namespace CYaPass
             if (userShape.Count > 1)
             {
                 CalculateGeometricSaltValue();
-                ComputeHashBytes();
+                ComputeHashString();
+            }
+            if ((bool)addUppercaseCheckbox.IsChecked)
+            {
+                StringBuilder hashSb = new StringBuilder(passwordTextBox.Text);
+                AddUpperCaseLetter(hashSb);
+                passwordTextBox.Text = hashSb.ToString();
             }
             var dataPackage = new DataPackage();
             dataPackage.SetText(passwordTextBox.Text);
@@ -406,6 +428,14 @@ namespace CYaPass
         private void SiteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GeneratePassword();
+        }
+
+        private void addUppercaseCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
         }
     }
 }
