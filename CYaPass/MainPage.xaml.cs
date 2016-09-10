@@ -349,7 +349,7 @@ namespace CYaPass
         private void GeneratePassword()
         {
             if (SiteListBox.SelectedItem == null || 
-                SiteListBox.SelectedIndex == 0 ||
+                SiteListBox.SelectedIndex < 0 ||
                 SiteListBox.SelectedItem.ToString() == String.Empty) { return; }
             if (userShape.Count > 1)
             {

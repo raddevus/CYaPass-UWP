@@ -15,21 +15,22 @@
         <ListView BorderThickness="2" BorderBrush="Aquamarine" 
                   x:Name="SiteListBox" HorizontalAlignment="Left" Height="187" 
                   Margin="10,29,0,0" VerticalAlignment="Top" Width="264" SelectionChanged="SiteListBox_SelectionChanged">
-            <GridView/>
+            
         </ListView>
         <Button x:Name="AddSiteButton" Content="Add Site" HorizontalAlignment="Left"
-                
                 Margin="198,221,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
         <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left" Margin="63,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
         <Button x:Name="ClearGridButton" Content="Clear" HorizontalAlignment="Left" Margin="487,279,0,0" VerticalAlignment="Top" Click="ClearGridButton_Click"/>
         <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="0,541,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="560"/>
-        <Frame x:Name="frame" Content="Generated Password" HorizontalAlignment="Left" Height="62" Margin="0,525,0,0" VerticalAlignment="Top" Width="560"/>
+        
         <StackPanel HorizontalAlignment="Left" Height="106" Margin="10,258,0,0" VerticalAlignment="Top" Width="264">
             <CheckBox x:Name="addUppercaseCheckbox" Content="Add Uppercase" HorizontalAlignment="Left" VerticalAlignment="Top" Width="254" Click="addUppercaseCheckbox_Click"/>
             <CheckBox x:Name="addSpecialCharscheckBox" Content="Add Special Chars" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,93,0"/>
             <CheckBox x:Name="setMaxLengthCheckBox" Content="Set Max Length" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,93,0"/>
         </StackPanel>
+        <Grid>
         <TextBox x:Name="textBox" TextWrapping="Wrap" Text="TextBox" Margin="322,375,175,190" RenderTransformOrigin="1.603,1.875"/>
+        </Grid>
 
     </Grid>
 </Page>
