@@ -94,6 +94,7 @@ namespace CYaPass
 
         private void AddUpperCaseLetter(StringBuilder pwd)
         {
+            if (pwd.Length <= 0) { return; }
             int index = -1;
             string target = string.Empty;
             foreach (Char c in pwd.ToString())

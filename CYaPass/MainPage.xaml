@@ -9,28 +9,47 @@
     Height="597" Width="570" Background="LightGray" Loaded="Page_Loaded">
 
     <Grid>
-
-        <Canvas HorizontalAlignment="Left" x:Name="MainCanvas"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Canvas HorizontalAlignment="Left" x:Name="MainCanvas" Grid.Column="0"
                 Height="252" Width="252" Margin="300,10,0,0" VerticalAlignment="Top" Background="AliceBlue" Tapped="MainCanvas_Tapped" PointerMoved="MainCanvas_PointerMoved"/>
-        <ListView BorderThickness="2" BorderBrush="Aquamarine" 
+        <ListView BorderThickness="2" BorderBrush="Aquamarine" Grid.Column="0"
                   x:Name="SiteListBox" HorizontalAlignment="Left" Height="187" 
                   Margin="10,29,0,0" VerticalAlignment="Top" Width="264" SelectionChanged="SiteListBox_SelectionChanged">
-            
         </ListView>
         <Button x:Name="AddSiteButton" Content="Add Site" HorizontalAlignment="Left"
+                Grid.Column="0"
                 Margin="198,221,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
-        <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left" Margin="63,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
-        <Button x:Name="ClearGridButton" Content="Clear" HorizontalAlignment="Left" Margin="487,279,0,0" VerticalAlignment="Top" Click="ClearGridButton_Click"/>
-        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="0,541,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="560"/>
-        
-        <StackPanel HorizontalAlignment="Left" Height="106" Margin="10,258,0,0" VerticalAlignment="Top" Width="264">
-            <CheckBox x:Name="addUppercaseCheckbox" Content="Add Uppercase" HorizontalAlignment="Left" VerticalAlignment="Top" Width="254" Click="addUppercaseCheckbox_Click"/>
-            <CheckBox x:Name="addSpecialCharscheckBox" Content="Add Special Chars" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,93,0"/>
-            <CheckBox x:Name="setMaxLengthCheckBox" Content="Set Max Length" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,93,0"/>
+        <Button x:Name="DeleteSiteButton" Content="Delete Site" Grid.Column="0"
+                HorizontalAlignment="Left" Margin="63,221,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
+        <Button x:Name="ClearGridButton" Content="Clear" HorizontalAlignment="Left" Grid.Column="1"
+                Margin="200,279,0,0" VerticalAlignment="Top" Click="ClearGridButton_Click"/>
+        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="0,541,0,0" Grid.ColumnSpan="2"
+                 TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="560"/>
+        <StackPanel HorizontalAlignment="Left" Height="128" Margin="10,258,0,0" Grid.Column="0"
+                    VerticalAlignment="Top" Width="285">
+            <Grid Margin="0,0,-11,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" ></RowDefinition>
+                    <RowDefinition Height="40" ></RowDefinition>
+                    <RowDefinition Height="40" ></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="addUppercaseCheckbox"  Grid.Row="0" Grid.Column="0" Content="Add Uppercase" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="254" Click="addUppercaseCheckbox_Click" Margin="7,0,3,0"/>
+                <CheckBox x:Name="addSpecialCharscheckBox" Grid.Row="1" Grid.Column="0" Content="Add Special Chars" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="7,0,3,0"/>
+                <TextBox x:Name="specialCharsTextBox" Grid.Column="1" Grid.Row="1" Margin="7,0,3,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.RowSpan="1" TextWrapping="NoWrap" Text="#"/>
+                <CheckBox x:Name="setMaxLengthCheckBox" Grid.Row="2" Grid.Column="0" Content="Set Max Length" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="7,0,3,0"/>
+                <local:NumericUpDown Grid.Column="1" HorizontalAlignment="Left" Margin="7,0,3,0" Grid.Row="2" VerticalAlignment="Center" Width="64"/>
+            </Grid>
         </StackPanel>
-        <Grid>
-        <TextBox x:Name="textBox" TextWrapping="Wrap" Text="TextBox" Margin="322,375,175,190" RenderTransformOrigin="1.603,1.875"/>
-        </Grid>
 
     </Grid>
 </Page>

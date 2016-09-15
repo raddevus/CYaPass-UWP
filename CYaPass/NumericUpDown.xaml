@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="CYaPass.NumericUpDown"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CYaPass"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="16" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="16" />
+            <RowDefinition Height="16" />
+        </Grid.RowDefinitions>
+        <TextBox Name="NUDTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Center" KeyDown="NUDTextBox_KeyDown" />
+        <RepeatButton Name="NUDButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="12" FontFamily="Marlett" VerticalContentAlignment="Center" Width="20" Height="20" HorizontalContentAlignment="Center" Click="NUDButtonUP_Click">
+        </RepeatButton>
+        <RepeatButton Name="NUDButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="12"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="20" Height="20" VerticalAlignment="Bottom" Click="NUDButtonDown_Click"></RepeatButton>
+    </Grid>
+</UserControl>
