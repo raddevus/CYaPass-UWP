@@ -45,9 +45,7 @@ namespace CYaPass
         private int postWidth = 10;
         private int centerPoint = 50;
         private int offset;
-        private byte[] saltBytes;
-        private StringBuilder pwdBuilder;
-
+      
         public MainPage()
         {
             this.InitializeComponent();
@@ -107,6 +105,20 @@ namespace CYaPass
                 }
             }
             pwd[index] = Convert.ToChar(target.ToUpper());
+        }
+
+        private string AddSpecialChars(string pwd)
+        {
+            if (specialCharsTextBox.Text == string.Empty)
+            {
+                return pwd;
+            }
+            string temp = pwd;
+            int charOffset = 2;
+            pwd = temp.Substring(0, charOffset);
+            pwd += specialCharsTextBox.Text;
+            pwd += temp.Substring(2, temp.Length - charOffset);
+            return pwd;
         }
 
         private void ComputeHashString()
@@ -357,11 +369,24 @@ namespace CYaPass
                 CalculateGeometricSaltValue();
                 ComputeHashString();
             }
+
             if ((bool)addUppercaseCheckbox.IsChecked)
             {
                 StringBuilder hashSb = new StringBuilder(passwordTextBox.Text);
                 AddUpperCaseLetter(hashSb);
                 passwordTextBox.Text = hashSb.ToString();
+            }
+
+            if ((bool)addSpecialCharscheckBox.IsChecked)
+            {
+                passwordTextBox.Text = AddSpecialChars(passwordTextBox.Text);
+            }
+
+            if ((bool)setMaxLengthCheckBox.IsChecked)
+            {
+                // Math.Min insures we don't overflow bounds of string
+                String pwd = passwordTextBox.Text;
+                passwordTextBox.Text = pwd.Substring(0, Math.Min((int)maxLengthUpDown.currentValue, pwd.Length));
             }
             var dataPackage = new DataPackage();
             dataPackage.SetText(passwordTextBox.Text);
@@ -428,10 +453,37 @@ namespace CYaPass
 
         private void SiteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GeneratePassword();
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
         }
 
         private void addUppercaseCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
+        }
+
+        private void addSpecialCharscheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
+        }
+
+        private void specialCharsTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
+        }
+
+        private void setMaxLengthCheckBox_Click(object sender, RoutedEventArgs e)
         {
             if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {

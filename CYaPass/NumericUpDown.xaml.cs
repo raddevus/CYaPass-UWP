@@ -22,10 +22,12 @@ namespace CYaPass
         int minvalue = 0,
             maxvalue = 100,
             startvalue = 10;
+        public int  currentValue;
         public NumericUpDown()
         {
             InitializeComponent();
             NUDTextBox.Text = startvalue.ToString();
+            currentValue = startvalue;
         }
 
         private void NUDButtonUP_Click(object sender, RoutedEventArgs e)
@@ -36,11 +38,16 @@ namespace CYaPass
         private void UpButtonClickHandler()
         {
             int number;
-            if (NUDTextBox.Text != "") { number = Convert.ToInt32(NUDTextBox.Text); }
-            else { number = 0; }
+            if (NUDTextBox.Text != "")
+            {
+                number = Convert.ToInt32(NUDTextBox.Text);
+                currentValue = number;
+            }
+            else { currentValue = number = 0; }
             if (number < maxvalue)
             {
-                NUDTextBox.Text = Convert.ToString(number + 1);
+                currentValue = ++number;
+                NUDTextBox.Text = Convert.ToString(currentValue);
             }
         }
 
@@ -56,7 +63,8 @@ namespace CYaPass
             else { number = 0; }
             if (number > minvalue)
             {
-                NUDTextBox.Text = Convert.ToString(number - 1);
+                currentValue--;
+                NUDTextBox.Text = Convert.ToString(currentValue);
             }
         }
 
@@ -64,9 +72,23 @@ namespace CYaPass
         {
             int number = 0;
             if (NUDTextBox.Text != "")
-                if (!int.TryParse(NUDTextBox.Text, out number)) NUDTextBox.Text = startvalue.ToString();
-            if (number > maxvalue) NUDTextBox.Text = maxvalue.ToString();
-            if (number < minvalue) NUDTextBox.Text = minvalue.ToString();
+            {
+                if (!int.TryParse(NUDTextBox.Text, out number))
+                {
+                    currentValue = startvalue;
+                    NUDTextBox.Text = startvalue.ToString();
+                }
+            }
+            if (number > maxvalue)
+            {
+                currentValue = maxvalue;
+                NUDTextBox.Text = maxvalue.ToString();
+            }
+            if (number < minvalue)
+            {
+                currentValue = minvalue;
+                NUDTextBox.Text = minvalue.ToString();
+            }
             NUDTextBox.SelectionStart = NUDTextBox.Text.Length;
 
         }
