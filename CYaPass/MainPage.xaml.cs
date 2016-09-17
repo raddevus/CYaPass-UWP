@@ -109,6 +109,7 @@ namespace CYaPass
 
         private string AddSpecialChars(string pwd)
         {
+            if (pwd == String.Empty) { return String.Empty; }
             if (specialCharsTextBox.Text == string.Empty)
             {
                 return pwd;
