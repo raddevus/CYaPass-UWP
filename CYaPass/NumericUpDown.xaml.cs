@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -21,13 +22,13 @@ namespace CYaPass
     {
         int minvalue = 0,
             maxvalue = 100,
-            startvalue = 10;
+            startValue = 10;
         public int  currentValue;
         public NumericUpDown()
         {
             InitializeComponent();
-            NUDTextBox.Text = startvalue.ToString();
-            currentValue = startvalue;
+            NUDTextBox.Text = startValue.ToString();
+            currentValue = startValue;
         }
 
         private void NUDButtonUP_Click(object sender, RoutedEventArgs e)
@@ -75,8 +76,8 @@ namespace CYaPass
             {
                 if (!int.TryParse(NUDTextBox.Text, out number))
                 {
-                    currentValue = startvalue;
-                    NUDTextBox.Text = startvalue.ToString();
+                    currentValue = startValue;
+                    NUDTextBox.Text = startValue.ToString();
                 }
             }
             if (number > maxvalue)

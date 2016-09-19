@@ -45,6 +45,11 @@ namespace CYaPass
         private int postWidth = 10;
         private int centerPoint = 50;
         private int offset;
+        StringBuilder pwdBuilder;
+        private int minvalue = 0;
+        private int maxvalue = 100;
+        private int currentValue;
+        private int startValue;
       
         public MainPage()
         {
@@ -54,6 +59,9 @@ namespace CYaPass
             GenerateAllPosts();
             DrawGridLines();
             DrawPosts();
+
+            NUDTextBox.Text = startValue.ToString();
+            currentValue = startValue;
         }
 
         private void CalculateGeometricSaltValue()
@@ -81,13 +89,14 @@ namespace CYaPass
             //System.Diagnostics.Debug.Print(LineSegments.PostPoints);
         }
 
-        private String GenCrypto(string clearText)
+        private void GenCrypto(string clearText)
         {
             var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256);
             IBuffer buff = CryptographicBuffer.ConvertStringToBinary(clearText, BinaryStringEncoding.Utf8);
             var hashed = alg.HashData(buff);
-            var res = CryptographicBuffer.EncodeToHexString(hashed);
-            return res;
+            
+            pwdBuilder = new StringBuilder(CryptographicBuffer.EncodeToHexString(hashed));
+            
         }
 
         private void AddUpperCaseLetter(StringBuilder pwd)
@@ -130,7 +139,7 @@ namespace CYaPass
             string clearTextMessage = LineSegments.PostValue.ToString();
             clearTextMessage += selItemText;
 
-            passwordTextBox.Text = GenCrypto(clearTextMessage);
+            GenCrypto(clearTextMessage);
          
         }
 
@@ -365,32 +374,32 @@ namespace CYaPass
             if (SiteListBox.SelectedItem == null || 
                 SiteListBox.SelectedIndex < 0 ||
                 SiteListBox.SelectedItem.ToString() == String.Empty) { return; }
+            CalculateGeometricSaltValue();
+            ComputeHashString();
             if (userShape.Count > 1)
             {
-                CalculateGeometricSaltValue();
-                ComputeHashString();
+                
             }
 
             if ((bool)addUppercaseCheckbox.IsChecked)
             {
-                StringBuilder hashSb = new StringBuilder(passwordTextBox.Text);
-                AddUpperCaseLetter(hashSb);
-                passwordTextBox.Text = hashSb.ToString();
+                AddUpperCaseLetter(pwdBuilder);
             }
+            String pwd = pwdBuilder.ToString();
 
             if ((bool)addSpecialCharscheckBox.IsChecked)
             {
-                passwordTextBox.Text = AddSpecialChars(passwordTextBox.Text);
+                pwd = AddSpecialChars(pwd);
             }
 
             if ((bool)setMaxLengthCheckBox.IsChecked)
             {
                 // Math.Min insures we don't overflow bounds of string
-                String pwd = passwordTextBox.Text;
-                passwordTextBox.Text = pwd.Substring(0, Math.Min((int)maxLengthUpDown.currentValue, pwd.Length));
+                pwd = pwd.Substring(0, Math.Min((int)currentValue, pwd.Length));
             }
+            passwordTextBox.Text = pwd;
             var dataPackage = new DataPackage();
-            dataPackage.SetText(passwordTextBox.Text);
+            dataPackage.SetText(pwd);
             Clipboard.SetContent(dataPackage);
         }
 
@@ -485,6 +494,90 @@ namespace CYaPass
         }
 
         private void setMaxLengthCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            {
+                GeneratePassword();
+            }
+        }
+
+        private void NUDButtonUP_Click(object sender, RoutedEventArgs e)
+        {
+            UpButtonClickHandler();
+        }
+
+        private void UpButtonClickHandler()
+        {
+            int number;
+            if (NUDTextBox.Text != "")
+            {
+                number = Convert.ToInt32(NUDTextBox.Text);
+                currentValue = number;
+            }
+            else { currentValue = number = 0; }
+            if (number < maxvalue)
+            {
+                currentValue = ++number;
+                NUDTextBox.Text = Convert.ToString(currentValue);
+            }
+        }
+
+        private void NUDButtonDown_Click(object sender, RoutedEventArgs e)
+        {
+            DownButtonClickHandler();
+        }
+
+        private void DownButtonClickHandler()
+        {
+            int number;
+            if (NUDTextBox.Text != "") { number = Convert.ToInt32(NUDTextBox.Text); }
+            else { number = 0; }
+            if (number > minvalue)
+            {
+                currentValue--;
+                NUDTextBox.Text = Convert.ToString(currentValue);
+            }
+        }
+
+        private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int number = 0;
+            if (NUDTextBox.Text != "")
+            {
+                if (!int.TryParse(NUDTextBox.Text, out number))
+                {
+                    currentValue = startValue;
+                    NUDTextBox.Text = startValue.ToString();
+                }
+            }
+            if (number > maxvalue)
+            {
+                currentValue = maxvalue;
+                NUDTextBox.Text = maxvalue.ToString();
+            }
+            if (number < minvalue)
+            {
+                currentValue = minvalue;
+                NUDTextBox.Text = minvalue.ToString();
+            }
+            NUDTextBox.SelectionStart = NUDTextBox.Text.Length;
+
+        }
+
+        private void NUDTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Up)
+            {
+                UpButtonClickHandler();
+            }
+
+            if (e.Key == Windows.System.VirtualKey.Down)
+            {
+                DownButtonClickHandler();
+            }
+        }
+
+        private void NUDTextBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
             if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {

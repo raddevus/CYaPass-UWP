@@ -18,10 +18,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0"  Grid.Row="0">
-            <TextBlock  FontSize="16" HorizontalAlignment="Center">1. Select a Site/Key</TextBlock>
+            <TextBlock  FontSize="16" HorizontalAlignment="Center">1. Select (or add) a Site / Key</TextBlock>
             <ListView BorderThickness="2" BorderBrush="Aquamarine"  
-                      x:Name="SiteListBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="251" 
-                      Margin="10,10,0,0"  Width="Auto" SelectionChanged="SiteListBox_SelectionChanged">
+                      x:Name="SiteListBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="233" 
+                      Margin="10,10,10,0"  Width="Auto" SelectionChanged="SiteListBox_SelectionChanged">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Padding" Value="5,0,0,0" />
@@ -30,16 +30,16 @@
                 <ListViewItem Content="Item 2"/>
             </ListView>
 
-            <StackPanel Margin="10,0,0,0" Orientation="Horizontal" Grid.Column="0">
-                <Button x:Name="DeleteSiteButton" Content="Delete Site" 
-                        HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
+            <StackPanel Margin="10,5,10,15" Orientation="Horizontal" Grid.Column="0" VariableSizedWrapGrid.RowSpan="0">
+                <Button x:Name="DeleteSiteButton" Content="Delete Site" HorizontalAlignment="Left"
+                         VerticalAlignment="Top" Click="DeleteSiteButton_Click"/>
                 <Button x:Name="AddSiteButton" Content="Add Site" HorizontalAlignment="Right"
-                    Margin="10,0,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
+                     Margin="3,0,0,0" VerticalAlignment="Top" Click="AddSiteButton_Click"/>
             </StackPanel>
         </StackPanel>
         <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Margin="7,150,0,0" Grid.Row="1" Grid.ColumnSpan="2"
                  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="560"/>
-        <StackPanel HorizontalAlignment="Left" Height="128" Margin="10,0,0,0" Grid.Column="0" Grid.Row="1"
+        <StackPanel HorizontalAlignment="Left" Height="128" Margin="10,20,0,0" Grid.Column="0" Grid.Row="1"
                     VerticalAlignment="Top" Width="285">
             <Grid Margin="0,0,-11,0">
                 <Grid.RowDefinitions>
@@ -55,15 +55,38 @@
                 <CheckBox x:Name="addSpecialCharscheckBox" Grid.Row="1" Grid.Column="0" Content="Add Special Chars" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="7,0,3,0"  Click="addSpecialCharscheckBox_Click"/>
                 <TextBox x:Name="specialCharsTextBox" Grid.Column="1" Grid.Row="1" Margin="7,0,3,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.RowSpan="1" TextWrapping="NoWrap" Text="#" TextChanged="specialCharsTextBox_TextChanged"/>
                 <CheckBox x:Name="setMaxLengthCheckBox" Grid.Row="2" Grid.Column="0" Content="Set Max Length" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="7,0,3,0"  Click="setMaxLengthCheckBox_Click"/>
-                <local:NumericUpDown x:Name="maxLengthUpDown" Grid.Column="1" HorizontalAlignment="Left" Margin="7,0,3,0" Grid.Row="2" VerticalAlignment="Center" Width="64"/>
+                <Grid Grid.Column="2" Grid.Row="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="16" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="16" />
+                        <RowDefinition Height="16" />
+                    </Grid.RowDefinitions>
+                    <TextBox Name="NUDTextBox"  Grid.Column="0" Grid.Row="0" 
+                 Grid.RowSpan="2" TextAlignment="Center" KeyDown="NUDTextBox_KeyDown" TextChanged="NUDTextBox_TextChanged_1"  />
+                    <RepeatButton Name="NUDButtonUP"  Grid.Column="1" Grid.Row="0"
+                       FontFamily="Marlett" HorizontalContentAlignment="Left"
+                        Padding="0" Height="16" Width="16" Content="t" FontSize="12" Click="NUDButtonUP_Click" >
+                    </RepeatButton>
+                    <RepeatButton Name="NUDButtonDown" 
+                       Grid.Column="1" Grid.Row="1" 
+                       VerticalContentAlignment="Center" 
+                      HorizontalContentAlignment="Left" Width="16" Height="16" 
+                      FontFamily="Marlett" Content="u" Padding="0" FontSize="12"
+                      VerticalAlignment="Bottom" Click="NUDButtonDown_Click"></RepeatButton>
+                </Grid>
+                
             </Grid>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="0">
             <TextBlock Grid.Column="1" Grid.Row="0" FontSize="16" HorizontalAlignment="Center">2. Draw a pattern</TextBlock>
-            <Canvas HorizontalAlignment="Center" x:Name="MainCanvas" 
-                    Height="252" Width="252" Margin="7,10,0,0" VerticalAlignment="Top" Background="AliceBlue" Tapped="MainCanvas_Tapped" PointerMoved="MainCanvas_PointerMoved"/>
+            <Canvas HorizontalAlignment="Left" x:Name="MainCanvas" 
+                    Height="252" Width="252" Margin="10,10,0,0" VerticalAlignment="Top" Background="AliceBlue" 
+                    Tapped="MainCanvas_Tapped" PointerMoved="MainCanvas_PointerMoved"/>
             <Button x:Name="ClearGridButton" Content="Clear"
-                    Margin="50,0,10,0" VerticalAlignment="Center" Click="ClearGridButton_Click" HorizontalAlignment="Right"/>
+                    Margin="190,5,10,0" VerticalAlignment="Center" Click="ClearGridButton_Click" HorizontalAlignment="Left"/>
         </StackPanel>
 
     </Grid>
