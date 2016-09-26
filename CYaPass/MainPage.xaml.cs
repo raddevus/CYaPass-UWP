@@ -49,7 +49,7 @@ namespace CYaPass
         private int minvalue = 0;
         private int maxvalue = 100;
         private int currentValue;
-        private int startValue;
+        private int startValue = 32;
       
         public MainPage()
         {
@@ -538,32 +538,7 @@ namespace CYaPass
                 NUDTextBox.Text = Convert.ToString(currentValue);
             }
         }
-
-        private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int number = 0;
-            if (NUDTextBox.Text != "")
-            {
-                if (!int.TryParse(NUDTextBox.Text, out number))
-                {
-                    currentValue = startValue;
-                    NUDTextBox.Text = startValue.ToString();
-                }
-            }
-            if (number > maxvalue)
-            {
-                currentValue = maxvalue;
-                NUDTextBox.Text = maxvalue.ToString();
-            }
-            if (number < minvalue)
-            {
-                currentValue = minvalue;
-                NUDTextBox.Text = minvalue.ToString();
-            }
-            NUDTextBox.SelectionStart = NUDTextBox.Text.Length;
-
-        }
-
+        
         private void NUDTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Up)
@@ -577,7 +552,7 @@ namespace CYaPass
             }
         }
 
-        private void NUDTextBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
