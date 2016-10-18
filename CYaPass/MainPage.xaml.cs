@@ -22,10 +22,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
-
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace CYaPass
 {
     /// <summary>
@@ -36,10 +32,7 @@ namespace CYaPass
     {
         
         private SiteKeys allSites = new SiteKeys();
-        private List<Point> userShape = new List<Point>();
-        private LineSegments LineSegments = new LineSegments();
-        private Point previousPoint;
-        private bool previousPointExists;
+
         private Point MouseLoc;
         private List<Point> allPosts;
         private int postWidth = 10;
@@ -50,7 +43,9 @@ namespace CYaPass
         private int maxvalue = 100;
         private int currentValue;
         private int startValue = 32;
-      
+        private UserPath us = new UserPath();
+        private int hitTestIdx;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -63,32 +58,7 @@ namespace CYaPass
             NUDTextBox.Text = startValue.ToString();
             currentValue = startValue;
         }
-
-        private void CalculateGeometricSaltValue()
-        {
-            LineSegments.PostPoints = String.Empty;
-            LineSegments.PostValue = 0;
-
-            foreach (LineSegment l in LineSegments)
-            {
-                for (int x = 0; x < allPosts.Count; x++)
-                {
-                    if (l.Start.X == allPosts[x].X && l.Start.Y == allPosts[x].Y)
-                    {
-                        //System.Diagnostics.Debug.Print(string.Format("START x : {0}", x));
-                        LineSegments.AddOn(x);
-                    }
-                    if (l.End.X == allPosts[x].X && l.End.Y == allPosts[x].Y)
-                    {
-                        //System.Diagnostics.Debug.Print(string.Format("END x : {0}", x));
-                        LineSegments.AddOn(x);
-                    }
-                }
-            }
-            //System.Diagnostics.Debug.Print(String.Format("Value : {0}", LineSegments.PostValue));
-            //System.Diagnostics.Debug.Print(LineSegments.PostPoints);
-        }
-
+        
         private void GenCrypto(string clearText)
         {
             var alg = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256);
@@ -135,21 +105,17 @@ namespace CYaPass
         {
             
             var selItemText = SiteListBox.SelectedItem.ToString();
-            
-            string clearTextMessage = LineSegments.PostValue.ToString();
+
+            string clearTextMessage = (us.PointValue + 28).ToString();
             clearTextMessage += selItemText;
 
             GenCrypto(clearTextMessage);
          
         }
-
-        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Draw(e.GetPosition(MainCanvas));
-        }
-
+        
         private bool HitTest(ref Point p)
         {
+            int loopcount = 0;
             foreach (Point Pt in allPosts)
             {
                 if ((p.X >= (Pt.X + offset) - postWidth) && (p.X <= (Pt.X + offset) + postWidth))
@@ -157,9 +123,11 @@ namespace CYaPass
                     if ((p.Y >= (Pt.Y + offset) - postWidth) && (p.Y <= (Pt.Y + offset) + postWidth))
                     {
                         p = Pt;
+                        hitTestIdx = loopcount;
                         return true;
                     }
                 }
+                loopcount++;
             }
 
             return false;
@@ -199,93 +167,9 @@ namespace CYaPass
                 return;
             }
 
-            DrawLine(currentPoint.X, currentPoint.Y);
-            if (IsNewPoint(currentPoint))
-            {
-                if (userShape.Count > 0)
-                {
-                    if (IsNewLineSegment(new LineSegment(userShape[userShape.Count - 1], currentPoint))) // never allow a duplicate line segment in the list
-                    {
-                        LineSegments.Add(new LineSegment(userShape[userShape.Count - 1], currentPoint));
-                    }
-                }
-                userShape.Add(currentPoint);
-                DrawHighlight();
-                if (SiteListBox.SelectedItems.Count > 0 && userShape.Count > 1)
-                {
-                    //GenPassword();
-                }
-            }
-            previousPointExists = true;
-            previousPoint = currentPoint;
+            us.append(currentPoint, hitTestIdx);
+            passwordTextBox.Text = String.Format("{0}", us.PointValue);
 
-        }
-
-
-        private bool IsNewPoint(Point currentPoint)
-        {
-            if (userShape.Count > 0)
-            {
-                if (userShape.Count > 1)
-                {
-                    if (!((currentPoint.X == userShape[userShape.Count - 1].X && currentPoint.Y == userShape[userShape.Count - 1].Y)
-                        || (currentPoint.X == userShape[userShape.Count - 2].X || currentPoint.Y == userShape[userShape.Count - 2].Y)))
-                    {
-                        return true;
-                    }
-                }
-                if (!(currentPoint.X == userShape[userShape.Count - 1].X && currentPoint.Y == userShape[userShape.Count - 1].Y))
-                {
-                    return true;
-                }
-            }
-            else { return true; }
-            return false;
-        }
-
-        private bool IsNewLineSegment(LineSegment l)
-        {
-            LineSegment duplicate = LineSegments.Find(ls => (ls.Start.X == l.Start.X && ls.Start.Y == l.Start.Y) && (ls.End.X == l.End.X && ls.End.Y == l.End.Y) || (ls.End.X == l.Start.X && ls.End.Y == l.Start.Y) && (ls.Start.X == l.End.X && ls.Start.Y == l.End.Y));
-            if (duplicate == null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private void Draw(Point m)
-        {
-            Brush blackBrush = new SolidColorBrush(Colors.Black);
-            Brush greenBrush = new SolidColorBrush(Colors.Green);
-            MainCanvas.Children.Clear();
-            DrawGridLines();
-            DrawPosts();
-
-            int mX = (int)m.X;
-            int mY = (int)m.Y;
-            Ellipse el = new Ellipse();
-            el.Width = 15;
-            el.Height = 15;
-            el.SetValue(Canvas.LeftProperty, (Double)mX);
-            el.SetValue(Canvas.TopProperty, (Double)mY);
-            el.Fill = blackBrush;
-            Line l = new Line();
-            l.Fill = greenBrush;
-            //l.Width = 5;
-
-            l.Stroke = greenBrush;
-            l.StrokeThickness = 3;
-
-            l.X1 = 0;
-            l.Y1 = 0;
-            l.X2 = mX;
-            l.Y2 = mY;
-
-            MainCanvas.Children.Add(el);
-            MainCanvas.Children.Add(l);
         }
 
         private void DrawPosts()
@@ -349,37 +233,41 @@ namespace CYaPass
             el.Stroke = b;
             el.Width = postWidth + 10;
             el.Height = postWidth + 10;
-            el.SetValue(Canvas.LeftProperty, (Double)userShape[0].X - offset);
-            el.SetValue(Canvas.TopProperty, (Double)userShape[0].Y - offset);
+            if (us.allPoints.Count > 0)
+            {
+                el.SetValue(Canvas.LeftProperty, (Double)us.allPoints[0].X - offset);
+                el.SetValue(Canvas.TopProperty, (Double)us.allPoints[0].Y - offset);
+            }
             MainCanvas.Children.Add(el);
         }
 
-        private void DrawLine(Double x, Double y)
+        void DrawUserShape()
         {
-            if (!previousPointExists) { return; }
-            previousPointExists = true;
+            foreach (Segment s in us.allSegments)
+            {
+                DrawLine(s.Begin, s.End);
+            }
+        }
+
+        private void DrawLine(Point begin, Point end)
+        {
             Line l = new Line();
             l.StrokeThickness = 5;
             Brush b = new SolidColorBrush(Colors.Green);
             l.Stroke = b;
-            l.X1 = previousPoint.X + offset;
-            l.Y1 = previousPoint.Y + offset;
-            l.X2 = x + offset;
-            l.Y2 = y + offset;
+            l.X1 = begin.X + offset;
+            l.Y1 = begin.Y + offset;
+            l.X2 = end.X + offset;
+            l.Y2 = end.Y + offset;
             MainCanvas.Children.Add(l);
         }
 
         private void GeneratePassword()
         {
-            if (SiteListBox.SelectedItem == null || 
+            if (SiteListBox.SelectedItem == null ||
                 SiteListBox.SelectedIndex < 0 ||
                 SiteListBox.SelectedItem.ToString() == String.Empty) { return; }
-            CalculateGeometricSaltValue();
             ComputeHashString();
-            if (userShape.Count > 1)
-            {
-                
-            }
 
             if ((bool)addUppercaseCheckbox.IsChecked)
             {
@@ -405,8 +293,9 @@ namespace CYaPass
 
         private void MainCanvas_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            SelectNewPoint();   
-            GeneratePassword();
+            SelectNewPoint();
+            DrawHighlight();
+            DrawUserShape();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -451,10 +340,8 @@ namespace CYaPass
 
         private void ClearGridButton_Click(object sender, RoutedEventArgs e)
         {
-            userShape.Clear();
-            LineSegments.Clear();
+            us = new UserPath();
             MainCanvas.Children.Clear();
-            previousPointExists = false;
             DrawGridLines();
             DrawPosts();
             passwordTextBox.Text = String.Empty;
@@ -463,7 +350,7 @@ namespace CYaPass
 
         private void SiteListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
@@ -471,7 +358,7 @@ namespace CYaPass
 
         private void addUppercaseCheckbox_Click(object sender, RoutedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
@@ -479,7 +366,7 @@ namespace CYaPass
 
         private void addSpecialCharscheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
@@ -487,7 +374,7 @@ namespace CYaPass
 
         private void specialCharsTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
@@ -495,7 +382,7 @@ namespace CYaPass
 
         private void setMaxLengthCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
@@ -554,7 +441,8 @@ namespace CYaPass
 
         private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (userShape.Count > 0 && SiteListBox.SelectedIndex >= 0)
+
+            if (us.allSegments.Count > 0 && SiteListBox.SelectedIndex >= 0)
             {
                 GeneratePassword();
             }
