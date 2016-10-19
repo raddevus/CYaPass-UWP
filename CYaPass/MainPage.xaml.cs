@@ -106,7 +106,7 @@ namespace CYaPass
             
             var selItemText = SiteListBox.SelectedItem.ToString();
 
-            string clearTextMessage = (us.PointValue + 28).ToString();
+            string clearTextMessage = (us.PointValue).ToString();
             clearTextMessage += selItemText;
 
             GenCrypto(clearTextMessage);
@@ -168,6 +168,7 @@ namespace CYaPass
             }
 
             us.append(currentPoint, hitTestIdx);
+            us.CalculateGeometricValue();
             passwordTextBox.Text = String.Format("{0}", us.PointValue);
 
         }

@@ -10,10 +10,12 @@ namespace CYaPass
     {
         public Point Begin;
         public Point End;
-        public Segment(Point begin, Point end)
+        public int PointValue;
+        public Segment(Point begin, Point end, int pointValue)
         {
             Begin = begin;
             End = end;
+            PointValue = pointValue;
         }
 
         public override bool Equals(object obj)
