@@ -19,14 +19,18 @@ namespace CYaPass
         public void append(Point currentPoint, int postValue)
         {
             this.currentPoint = currentPoint;
-            previousPostValue = postValue;
             
             if (allPoints.Count >= 1)
             {
-                int currentSegmentCount = allSegments.Count;
+                if (allPoints[allPoints.Count - 1].X == currentPoint.X && allPoints[allPoints.Count - 1].Y == currentPoint.Y)
+                {
+                    // user clicked the same point twice
+                    return;
+                }
                 allSegments.Add(new Segment(allPoints[allPoints.Count - 1], currentPoint, postValue + previousPostValue));
             }
             allPoints.Add(currentPoint);
+            previousPostValue = postValue;
 
         }
 
