@@ -167,10 +167,8 @@ namespace CYaPass
                 return;
             }
 
-            us.append(currentPoint, hitTestIdx);
+            us.append(currentPoint, hitTestIdx + (hitTestIdx * (hitTestIdx / 6) * 10));
             us.CalculateGeometricValue();
-            passwordTextBox.Text = String.Format("{0}", us.PointValue);
-
         }
 
         private void DrawPosts()
@@ -297,6 +295,7 @@ namespace CYaPass
             SelectNewPoint();
             DrawHighlight();
             DrawUserShape();
+            GeneratePassword();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
