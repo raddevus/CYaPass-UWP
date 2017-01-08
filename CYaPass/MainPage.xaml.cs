@@ -318,6 +318,8 @@ namespace CYaPass
                 String newKey = dialog.siteKey;
                 allSites.Add(new CYaPass.SiteKey(newKey));
                 SiteListBox.Items.Add(new SiteKey(newKey));
+                SiteListBox.SelectedIndex = SiteListBox.Items.Count - 1;
+                SiteListBox.ScrollIntoView(SiteListBox.SelectedItem);
                 await allSites.Save();
             }
         }
